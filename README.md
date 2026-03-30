@@ -1,1 +1,2 @@
 # CoteboPC
+![Логотип](logo.png)
