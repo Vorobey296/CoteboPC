@@ -1,0 +1,72 @@
+{
+  "version": 2,
+  "dgSpecHash": "qIf4BCUqnmw=",
+  "success": true,
+  "projectFilePath": "C:\\CoteboPC\\CoteboPC\\CoteboPC.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia\\12.0.0\\avalonia.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.25547.20250602\\avalonia.angle.windows.natives.2.1.25547.20250602.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.buildservices\\11.3.2\\avalonia.buildservices.11.3.2.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.desktop\\12.0.0\\avalonia.desktop.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.fonts.inter\\12.0.0\\avalonia.fonts.inter.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.freedesktop\\12.0.0\\avalonia.freedesktop.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.freedesktop.atspi\\12.0.0\\avalonia.freedesktop.atspi.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.harfbuzz\\12.0.0\\avalonia.harfbuzz.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.native\\12.0.0\\avalonia.native.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.remote.protocol\\12.0.0\\avalonia.remote.protocol.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.skia\\12.0.0\\avalonia.skia.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.themes.fluent\\12.0.0\\avalonia.themes.fluent.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.win32\\12.0.0\\avalonia.win32.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\avalonia.x11\\12.0.0\\avalonia.x11.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\dialoghost.avalonia\\0.8.1\\dialoghost.avalonia.0.8.1.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\gregsstack.inputsimulatorstandard\\1.3.5\\gregsstack.inputsimulatorstandard.1.3.5.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\harfbuzzsharp\\8.3.1.3\\harfbuzzsharp.8.3.1.3.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\harfbuzzsharp.nativeassets.linux\\8.3.1.3\\harfbuzzsharp.nativeassets.linux.8.3.1.3.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\harfbuzzsharp.nativeassets.macos\\8.3.1.3\\harfbuzzsharp.nativeassets.macos.8.3.1.3.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\harfbuzzsharp.nativeassets.webassembly\\8.3.1.3\\harfbuzzsharp.nativeassets.webassembly.8.3.1.3.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\harfbuzzsharp.nativeassets.win32\\8.3.1.3\\harfbuzzsharp.nativeassets.win32.8.3.1.3.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\messagebox.avalonia\\3.3.1.1\\messagebox.avalonia.3.3.1.1.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\microcom.runtime\\0.11.4\\microcom.runtime.0.11.4.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\microsoft.extensions.configuration.binder\\8.0.0\\microsoft.extensions.configuration.binder.8.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\microsoft.extensions.options\\8.0.0\\microsoft.extensions.options.8.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\8.0.0\\microsoft.extensions.options.configurationextensions.8.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\skiasharp\\3.119.3-preview.1.1\\skiasharp.3.119.3-preview.1.1.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\skiasharp.nativeassets.linux\\3.119.3-preview.1.1\\skiasharp.nativeassets.linux.3.119.3-preview.1.1.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\skiasharp.nativeassets.macos\\3.119.3-preview.1.1\\skiasharp.nativeassets.macos.3.119.3-preview.1.1.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\skiasharp.nativeassets.webassembly\\3.119.3-preview.1.1\\skiasharp.nativeassets.webassembly.3.119.3-preview.1.1.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\skiasharp.nativeassets.win32\\3.119.3-preview.1.1\\skiasharp.nativeassets.win32.3.119.3-preview.1.1.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\system.drawing.common\\8.0.0\\system.drawing.common.8.0.0.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\telegram.bot\\22.9.6\\telegram.bot.22.9.6.nupkg.sha512",
+    "C:\\Users\\Vorobey\\.nuget\\packages\\tmds.dbus.protocol\\0.90.3\\tmds.dbus.protocol.0.90.3.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "message": "PackageReference System.Drawing.Common не будет урезано. Рассмотрите возможность удаления этого пакета из зависимостей, так как он, вероятно, не требуется.",
+      "projectPath": "C:\\CoteboPC\\CoteboPC\\CoteboPC.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\CoteboPC\\CoteboPC\\CoteboPC.csproj",
+      "libraryId": "System.Drawing.Common",
+      "targetGraphs": [
+        "net10.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "У пакета \"Tmds.DBus.Protocol\" 0.90.3 есть известная уязвимость https://github.com/advisories/GHSA-xrw6-gwf8-vvr9 (уровень серьезности: высокий уровень)",
+      "projectPath": "C:\\CoteboPC\\CoteboPC\\CoteboPC.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\CoteboPC\\CoteboPC\\CoteboPC.csproj",
+      "libraryId": "Tmds.DBus.Protocol",
+      "targetGraphs": [
+        "net10.0-windows",
+        "net10.0-windows/win-x64"
+      ]
+    }
+  ]
+}
