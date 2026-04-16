@@ -1,8 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using MsBox.Avalonia;           // Добавлено
-using MsBox.Avalonia.Enums;     // Добавлено
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -18,7 +17,7 @@ public partial class SecondSetupWindow : Window
         Loaded += OnLoaded;
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         bool isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
@@ -54,16 +53,23 @@ public partial class SecondSetupWindow : Window
             else
                 await PlatformHelpers.SetupLinuxAutostart();
 
-            var box = MessageBoxManager.GetMessageBoxStandard("Готово!", "Автозагрузка настроена.\nCoteboPC теперь работает в фоне.", ButtonEnum.Ok);
-            await box.ShowAsync();
+            var config = await ConfigService.LoadConfig();
+            if (config != null)
+            {
+                await CoteboBotService.StartAsync(config);
+                if (Application.Current is App currentApp)
+                {
+                    currentApp.EnsureTrayIcon();
+                }
+            }
 
-            CoteboBotService.Start();
-            this.Close();
+            WindowState = WindowState.Minimized;
+            ShowInTaskbar = false;
+            Hide();
         }
         catch (Exception ex)
         {
-            var errorBox = MessageBoxManager.GetMessageBoxStandard("Ошибка", $"Не удалось настроить автозагрузку:\n{ex.Message}", ButtonEnum.Ok);
-            await errorBox.ShowAsync();
+            await SimpleMessageBox.ShowAsync(this, "Ошибка", $"Не удалось настроить автозагрузку:\n{ex.Message}");
         }
     }
 }

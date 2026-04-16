@@ -1,8 +1,12 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
-using MsBox.Avalonia;           // Добавлено
-using MsBox.Avalonia.Enums;     // Добавлено
+using CoteboPC;
+using CoteboPC.Utils;
+using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace CoteboPC.Views;
@@ -21,19 +25,38 @@ public partial class FirstSetupWindow : Window
 
         if (string.IsNullOrWhiteSpace(token) || !long.TryParse(userIdText, out long userId))
         {
-            var box = MessageBoxManager.GetMessageBoxStandard("Ошибка", "Пожалуйста, введите корректный Bot Token и User ID", ButtonEnum.Ok);
-            await box.ShowAsync();
+            await SimpleMessageBox.ShowAsync(this, "Ошибка", "Пожалуйста, введите корректный Bot Token и User ID");
             return;
         }
 
         await ConfigService.SaveConfig(token, userId);
 
-        var successBox = MessageBoxManager.GetMessageBoxStandard("Успешно", "Настройки сохранены!", ButtonEnum.Ok);
-        await successBox.ShowAsync();
+        try
+        {
+            await CoteboBotService.StartAsync(new AppConfig { Token = token, ChatId = userId });
+            if (Application.Current is App currentApp)
+            {
+                currentApp.EnsureTrayIcon();
+            }
+        }
+        catch (Exception ex)
+        {
+            await SimpleMessageBox.ShowAsync(this, "Ошибка", $"Не удалось запустить бота: {ex.Message}");
+            return;
+        }
 
+        await ShowSecondSetupAndHide();
+    }
+
+    private async Task ShowSecondSetupAndHide()
+    {
         var secondWindow = new SecondSetupWindow();
         secondWindow.Show();
-        this.Close();
+        
+        WindowState = WindowState.Minimized;
+        ShowInTaskbar = false;
+        Hide();
+        await Task.CompletedTask;
     }
 
     private void BotTokenHelp_Click(object sender, RoutedEventArgs e)

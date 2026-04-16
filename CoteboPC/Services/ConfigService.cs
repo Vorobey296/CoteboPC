@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -16,6 +14,8 @@ public static class ConfigService
 
     public static bool ConfigExists() => File.Exists(ConfigPath);
 
+    public static string GetConfigPath() => ConfigPath;
+
     public static async Task SaveConfig(string token, long chatId)
     {
         var dir = Path.GetDirectoryName(ConfigPath)!;
@@ -23,43 +23,75 @@ public static class ConfigService
 
         var config = new AppConfig
         {
-            Token = Encrypt(token),
+            Token = token,
             ChatId = chatId
         };
 
         var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
-        await File.WriteAllTextAsync(ConfigPath, json);
+        await File.WriteAllTextAsync(ConfigPath, json).ConfigureAwait(false);
+        Logger.Log($"[Config] Saved config to {ConfigPath}");
     }
 
     public static async Task<AppConfig?> LoadConfig()
     {
-        if (!File.Exists(ConfigPath)) return null;
+        if (!File.Exists(ConfigPath))
+        {
+            Logger.Log($"[Config] Config file not found at {ConfigPath}");
+            return null;
+        }
 
-        var json = await File.ReadAllTextAsync(ConfigPath);
-        var config = JsonSerializer.Deserialize<AppConfig>(json);
+        try
+        {
+            var json = await File.ReadAllTextAsync(ConfigPath).ConfigureAwait(false);
+            var config = JsonSerializer.Deserialize<AppConfig>(json);
 
-        if (config?.Token != null)
-            config.Token = Decrypt(config.Token);
+            if (config == null)
+            {
+                Logger.Log($"[Config] Failed to deserialize config from {ConfigPath}");
+                return null;
+            }
 
-        return config;
+            if (string.IsNullOrWhiteSpace(config.Token) || config.ChatId == 0)
+            {
+                Logger.Log($"[Config] Invalid config loaded (Token empty or ChatId zero)");
+                return null;
+            }
+
+            try
+            {
+                config.Token = Decrypt(config.Token);
+                Logger.Log("[Config] Token was decrypted from stored config.");
+            }
+            catch (Exception)
+            {
+                Logger.Log("[Config] Token decryption failed; using raw token from config.");
+            }
+
+            Logger.Log($"[Config] Loaded config from {ConfigPath}");
+            return config;
+        }
+        catch (Exception ex)
+        {
+            Logger.Log($"[Config] LoadConfig exception: {ex}");
+            return null;
+        }
     }
 
     private static string Encrypt(string plainText)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            byte[] data = Encoding.UTF8.GetBytes(plainText);
-            byte[] encrypted = ProtectedData.Protect(data, null, DataProtectionScope.CurrentUser);
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(plainText);
+            byte[] encrypted = System.Security.Cryptography.ProtectedData.Protect(data, null, System.Security.Cryptography.DataProtectionScope.CurrentUser);
             return Convert.ToBase64String(encrypted);
         }
         else
         {
-            // Простое шифрование для Linux
-            using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes("CoteboPC2026SecretKey12345678"); // 32 байта
+            using var aes = System.Security.Cryptography.Aes.Create();
+            aes.Key = System.Text.Encoding.UTF8.GetBytes("CoteboPC2026SecretKey12345678");
             aes.IV = new byte[16];
             using var encryptor = aes.CreateEncryptor();
-            byte[] data = Encoding.UTF8.GetBytes(plainText);
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(plainText);
             byte[] encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
             return Convert.ToBase64String(encrypted);
         }
@@ -70,18 +102,18 @@ public static class ConfigService
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             byte[] encrypted = Convert.FromBase64String(encryptedText);
-            byte[] data = ProtectedData.Unprotect(encrypted, null, DataProtectionScope.CurrentUser);
-            return Encoding.UTF8.GetString(data);
+            byte[] data = System.Security.Cryptography.ProtectedData.Unprotect(encrypted, null, System.Security.Cryptography.DataProtectionScope.CurrentUser);
+            return System.Text.Encoding.UTF8.GetString(data);
         }
         else
         {
-            using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes("CoteboPC2026SecretKey12345678");
+            using var aes = System.Security.Cryptography.Aes.Create();
+            aes.Key = System.Text.Encoding.UTF8.GetBytes("CoteboPC2026SecretKey12345678");
             aes.IV = new byte[16];
             using var decryptor = aes.CreateDecryptor();
             byte[] encrypted = Convert.FromBase64String(encryptedText);
             byte[] data = decryptor.TransformFinalBlock(encrypted, 0, encrypted.Length);
-            return Encoding.UTF8.GetString(data);
+            return System.Text.Encoding.UTF8.GetString(data);
         }
     }
 }

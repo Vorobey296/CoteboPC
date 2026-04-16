@@ -3,11 +3,15 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 using GregsStack.InputSimulatorStandard;
 
 namespace CoteboPC.Utils;
@@ -26,7 +30,11 @@ public static class Commands
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // Захват всего экрана на Windows
-                var screenBounds = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
+                var primaryScreen = System.Windows.Forms.Screen.PrimaryScreen;
+                if (primaryScreen == null)
+                    return "❌ Не удалось получить экран для скриншота.";
+
+                var screenBounds = primaryScreen.Bounds;
                 bmp = new Bitmap(screenBounds.Width, screenBounds.Height);
                 using var graphics = Graphics.FromImage(bmp);
                 graphics.CopyFromScreen(0, 0, 0, 0, bmp.Size);
@@ -46,6 +54,8 @@ public static class Commands
 
                 if (process != null)
                     await process.WaitForExitAsync();
+                else
+                    return "❌ Не удалось запустить утилиту для скриншота.";
 
                 if (File.Exists(tempFile))
                 {
@@ -78,10 +88,76 @@ public static class Commands
     {
         var sb = new StringBuilder();
         sb.AppendLine($"🖥 Операционная система: {RuntimeInformation.OSDescription}");
+        sb.AppendLine($"� Имя хоста: {Dns.GetHostName()}");
         sb.AppendLine($"💾 Используемая память (GC): {GC.GetTotalMemory(false) / (1024 * 1024)} МБ");
         sb.AppendLine($"⏱ Uptime: {Environment.TickCount64 / 3600000} часов");
         sb.AppendLine($"🌐 .NET версия: {RuntimeInformation.FrameworkDescription}");
         return sb.ToString();
+    }
+
+    public static async Task<string> GetIpAddresses()
+    {
+        try
+        {
+            var addresses = Dns.GetHostAddresses(Dns.GetHostName())
+                .Where(a => a.AddressFamily == AddressFamily.InterNetwork)
+                .Select(a => a.ToString())
+                .Distinct()
+                .ToArray();
+
+            if (!addresses.Any())
+                return "❌ Не удалось получить IP-адреса.";
+
+            return "🌐 IP-адреса: " + string.Join(", ", addresses);
+        }
+        catch (Exception ex)
+        {
+            return $"❌ Ошибка при получении IP: {ex.Message}";
+        }
+    }
+
+    public static async Task<string> GetProcessesList()
+    {
+        try
+        {
+            var processes = Process.GetProcesses()
+                .OrderBy(p => p.ProcessName)
+                .Take(16)
+                .Select(p => $"{p.Id}: {p.ProcessName}")
+                .ToArray();
+
+            return processes.Length == 0
+                ? "❌ Не удалось получить список процессов."
+                : "🧠 Текущие процессы:\n" + string.Join("\n", processes);
+        }
+        catch (Exception ex)
+        {
+            return $"❌ Ошибка получения процессов: {ex.Message}";
+        }
+    }
+
+    public static async Task<string> OpenPath(string path)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return "❌ Укажите путь или URL для открытия.";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo("cmd.exe", $"/c start \"\" \"{path}\"") { CreateNoWindow = true, UseShellExecute = false });
+            }
+            else
+            {
+                Process.Start(new ProcessStartInfo("xdg-open", path) { UseShellExecute = false });
+            }
+
+            return $"✅ Открываю: {path}";
+        }
+        catch (Exception ex)
+        {
+            return $"❌ Не удалось открыть путь: {ex.Message}";
+        }
     }
 
     /// <summary>
@@ -198,6 +274,38 @@ public static class Commands
     /// <summary>
     /// Заглушка для остальных команд
     /// </summary>
+    public static ReplyKeyboardMarkup GetCommandsKeyboard()
+    {
+        return new ReplyKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                new KeyboardButton("🔍 Ping"),
+                new KeyboardButton("📸 Screenshot")
+            },
+            new[]
+            {
+                new KeyboardButton("🖥 Sysinfo"),
+                new KeyboardButton("🌐 IP-Address")
+            },
+            new[]
+            {
+                new KeyboardButton("🧠 Processes"),
+                new KeyboardButton("📋 Minimize")
+            },
+            new[]
+            {
+                new KeyboardButton("⚡ Shutdown"),
+                new KeyboardButton("🔄 Reboot")
+            }
+        })
+        {
+            ResizeKeyboard = true,
+            OneTimeKeyboard = false,
+            Selective = false
+        };
+    }
+
     public static string Default(string command)
     {
         return $"✅ Команда '{command}' получена.\n\n" +
@@ -205,6 +313,9 @@ public static class Commands
                "/ping — проверка\n" +
                "/screenshot — скриншот\n" +
                "/sysinfo — информация о системе\n" +
+               "/ip — IP-адреса\n" +
+               "/processes — список процессов\n" +
+               "/open [путь|URL] — открыть файл или ссылку\n" +
                "/shutdown — выключить ПК\n" +
                "/reboot — перезагрузить ПК\n" +
                "/exec [команда] — выполнить команду\n" +

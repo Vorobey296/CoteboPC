@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoteboPC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13597b475bd2bf3314e1f6c9a288f62089b53ee5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e6879c73fcf8e4ce95d36ba915814dcd972219bf")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoteboPC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoteboPC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
